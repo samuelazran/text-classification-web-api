@@ -1,0 +1,6 @@
+#config files - need to be created in every enviroment
+config.cfg
+
+/src/
+*.rar
+*.pyc
