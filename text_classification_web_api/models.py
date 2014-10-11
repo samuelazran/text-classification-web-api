@@ -11,7 +11,7 @@ from sqlalchemy import select, func
 
 from settings import config
 
-connection_string = 'mysql://%s:%s@%s/%s' % (
+connection_string = 'mysql://%s:%s@%s/%s?charset=utf8' % (
     config['MYSQL_DATABASE_USER'],
     config['MYSQL_DATABASE_PASSWORD'],
     config['MYSQL_DATABASE_HOST'],
