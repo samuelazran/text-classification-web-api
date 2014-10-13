@@ -5,10 +5,10 @@ from settings import config
 
 app = Flask(__name__)
 app.config.from_object(config)
-app.config['DEBUG']=True
 
 
 manager = flask.ext.restless.APIManager(app, session=models.mysession)
+
 
 def get_many_postprocessor(result=None, search_params=None, **kw):
     """Accepts two arguments, `result`, which is the dictionary
@@ -28,7 +28,8 @@ def patch_single_preprocessor(instance_id=None, data=None, **kw):
 
     """
     print("PATCH instance_id: {0:s}, data: {1:s}, kw: {2:s}".format(str(instance_id), str(data), str(kw)))
-    data['gold']=1
+    if data.has_key('class_value'):
+        data['gold']=1
 
 data_blueprint = manager.create_api(
     models.Datum,
@@ -39,8 +40,10 @@ data_blueprint = manager.create_api(
         'PATCH_SINGLE': [patch_single_preprocessor]
     },
     postprocessors={
-        'GET_MANY': [get_many_postprocessor]
-    }
+        'GET_MANY': [get_many_postprocessor, models.dispose],
+        'PATCH_SINGLE': [models.dispose]
+    },
+    results_per_page=20
 )
 
 graph_blueprint = manager.create_api(
@@ -48,8 +51,9 @@ graph_blueprint = manager.create_api(
     methods=['GET'],
     collection_name='graph_data',
     postprocessors={
-        'GET_MANY': [get_many_postprocessor]
-    }
+        'GET_MANY': [get_many_postprocessor, models.dispose]
+    },
+    results_per_page=200
 )
 
 if __name__ == '__main__':

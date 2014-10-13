@@ -1,2 +1,3 @@
 -e git://github.com/bear/python-twitter.git#egg=python-twitter
 jsonpickle
+Flask-Restless

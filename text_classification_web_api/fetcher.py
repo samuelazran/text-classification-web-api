@@ -79,6 +79,8 @@ def save(statuses, fetch_model, fetch_datetime):
         print ("\tdone")
     else:
         print("\tno new data to save")
+    models.dispose()
+    print("connection disposed")
 
 
 def fetch(fetch_model, term):
