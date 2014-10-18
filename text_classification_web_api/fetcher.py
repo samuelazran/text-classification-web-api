@@ -1,5 +1,5 @@
 __author__ = 'Samuel'
-import models
+
 from models import config, mysession, Fetch, Datum, User, get_or_create
 
 import twitter
@@ -50,7 +50,7 @@ def save(statuses, fetch_model, fetch_datetime):
             external_id = s.id,
             source = fetch_model.source
         )
-        prediction=None
+
         if datum_is_new:
             new_data_count+=1
             sDict = s.AsDict()

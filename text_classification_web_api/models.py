@@ -18,7 +18,7 @@ connection_string = 'mysql://%s:%s@%s/%s?charset=utf8' % (
     config['MYSQL_DATABASE_DB']
     )
 
-engine = create_engine(connection_string, convert_unicode=True)
+engine = create_engine(connection_string, convert_unicode=True, pool_recycle=60*30) #pool_recycle=60*30 if the connection is open for more than 30 minutes, replace it with new one
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 mysession = scoped_session(Session)
 metadata = MetaData()
@@ -45,7 +45,7 @@ class JSONEncodedDict(TypeDecorator):
 
 
 class Datum(Base):
-    "epresent single record of `data` table, can be article, post, status, tweet and such"
+    "represent single record of `data` table, can be article, post, status, tweet and such"
     __tablename__ = 'data'
     id = Column(Integer, primary_key = True)
     external_id = Column(BigInteger)
