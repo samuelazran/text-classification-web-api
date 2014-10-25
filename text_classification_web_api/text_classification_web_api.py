@@ -24,7 +24,7 @@ def get_many_postprocessor(result=None, search_params=None, **kw):
     for object in result['objects']:
         if object.has_key('external_id'):
             object['external_id']=str(object['external_id'])
-    
+
 
 
 def patch_single_preprocessor(instance_id, result=None, data=None, **kw):
