@@ -2,6 +2,7 @@ __author__ = 'Samuel'
 from sqlalchemy import MetaData, Table, Column, LargeBinary, Date, DateTime, Float, Boolean, Integer, Unicode, BigInteger
 from sqlalchemy import ForeignKey
 from sqlalchemy import create_engine
+from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -18,13 +19,17 @@ connection_string = 'mysql://%s:%s@%s/%s?charset=utf8' % (
     config['MYSQL_DATABASE_DB']
     )
 
-engine = create_engine(connection_string, convert_unicode=True, pool_recycle=60*30) #pool_recycle=60*30 if the connection is open for more than 30 minutes, replace it with new one
+
+engine = create_engine(connection_string, convert_unicode=True, poolclass=NullPool, pool_recycle=60*60) #pool_recycle=60*60 if the connection is open for more than 60 minutes, replace it with new one
+
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 mysession = scoped_session(Session)
 metadata = MetaData()
 
 Base = declarative_base()
 Base.metadata.bind = engine
+
 
 import json
 
@@ -42,6 +47,11 @@ class JSONEncodedDict(TypeDecorator):
         if value is not None:
             value = json.loads(value)
         return value
+
+def dispose(**kw):
+    "release connection resources, untill next use of the session"
+    mysession.close()
+    mysession.bind.dispose()
 
 
 class Datum(Base):
@@ -122,10 +132,10 @@ class GrpahDatum(Base):
 #GrpahItem example usage
 # print(graph_data_select)
 #
-# q = mysession.query(GrpahDatum).filter(graph_data.c.language=="en")
+#q = mysession.query(GrpahDatum).filter(graph_data.c.language=="en")
 #
-# print("filtered query:")
-# print(q.statement)
+#print("filtered query:")
+#print(q.statement)
 #
 # graph_data_result = q.all()
 #

@@ -1,6 +1,6 @@
 __author__ = 'Samuel'
 
-from models import config, mysession, Fetch, Datum, User, get_or_create
+from models import config, mysession, dispose, Fetch, Datum, User, get_or_create
 
 import twitter
 from datetime import datetime
@@ -79,6 +79,8 @@ def save(statuses, fetch_model, fetch_datetime):
         print ("\tdone")
     else:
         print("\tno new data to save")
+    dispose()
+    print("connection disposed")
 
 
 def fetch(fetch_model, term):
@@ -115,15 +117,19 @@ if __name__=="__main__":
     fetch_en_bitcoin_twitter.search_terms = [
         """ "bitcoin" OR "bitcoins" OR "bitcoin's" OR "BTC" OR "BTC's" OR "#bitcoin" OR "#bitcoins" OR "#BTC" "bitcoin is" OR "bitcoin will" OR "bitcoin price" OR "bitcoin value" """,
 
+		""" "bitcoin value is" OR "bitcoin value are" """,
         """ "bitcoin" OR "bitcoins" """,
-        """ "bitcoins" OR "bitcoin's" """,
-        """ "BTC" OR "BTC's" OR "btc" """,
-
+		""" "bitcoin is" OR "bitcoin will" """,
+        """ "bitcoin value" OR "bitcoin's value" """,
+		""" "bitcoin price is" OR "bitcoin's price are" OR "BTC value" OR "BTC's value" OR "btc value" """,
+		
         """ "bitcoin" OR "bitcoins" OR "bitcoin's" OR "BTC" OR "BTC's" OR "#bitcoin" OR "#bitcoins" OR "#BTC" "bitcoin is" OR "bitcoin will" OR "bitcoin price" OR "bitcoin value" """,
 
+		""" "bitcoins" OR "bitcoin's" """,
         """ "#bitcoin" OR "#bitcoins" OR "#BTC" """,
-        """ "bitcoin is" OR "bitcoin will" """,
-        """ "bitcoin price" OR "bitcoin value" """
+        """ "BTC" OR "BTC's" OR "btc" """,
+        """ "bitcoin price" OR "bitcoin's price" """,
+		""" "BTC value" OR "BTC's value" OR "btc value" """,
         ]
     start(fetch_en_bitcoin_twitter)
 

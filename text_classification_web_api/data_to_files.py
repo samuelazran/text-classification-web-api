@@ -1,9 +1,5 @@
-import os, sys
 import codecs
-import json
-import time, datetime
-import sys
-from models import mysession, Datum
+from models import mysession, dispose, Datum
 
 dataFolder='D:/projects/machine-learning-projects/text-classification/text_classification/data/corpora/raw/en/bitcoin/twitter/'
 
@@ -15,7 +11,7 @@ def class_name_by_value(class_value):
         }.get(class_value, None)    # None is default if class_value not found
 
 def save(language, source, domain):
-    q = mysession.query(Datum).filter(Datum.c.gold==True, Datum.c.language==language, Datum.c.source==source, Datum.c.domain==domain)
+    q = mysession.query(Datum).filter(Datum.gold==True, Datum.language==language, Datum.source==source, Datum.domain==domain)
     data = q.all()
     for datum in data:
         print "saving " + str(datum.id)
@@ -25,7 +21,7 @@ def save(language, source, domain):
         f.write(datum.text)
         f.close
         print "done"
-
+    dispose()
 
 if __name__=="__main__":
     save("en","twitter","bitcoin")
